@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>의생명 아카데미 수험생 건강 지킴이 프로젝트 (혈당 편)</title>
+<style>
+:root{
+  --bg:#f6f7fb;--card:#fff;--ink:#172033;--muted:#667085;--line:#e4e7ec;
+  --blue:#2563eb;--red:#dc2626;--green:#059669;--orange:#ea580c;--purple:#7c3aed;--amber:#d97706
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Noto Sans KR",sans-serif;line-height:1.58}
+header{max-width:1200px;margin:auto;padding:26px 18px 14px}
+h1{margin:0 0 7px;font-size:clamp(1.45rem,3.1vw,2.3rem);letter-spacing:-.045em}
+.sub{margin:0;color:var(--muted)}.maker{font-weight:850;margin-top:8px}
+.tabs{max-width:1200px;margin:auto;padding:0 18px 12px;display:flex;gap:8px;position:sticky;top:0;background:rgba(246,247,251,.96);backdrop-filter:blur(8px);z-index:10;overflow:auto}
+.tabs button{white-space:nowrap;border:1px solid var(--line);background:white;border-radius:999px;padding:10px 14px;font-weight:800;cursor:pointer}
+.tabs button.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+main{max-width:1200px;margin:auto;padding:0 18px 36px}.tab{display:none}.tab.active{display:block}
+.grid{display:grid;grid-template-columns:365px 1fr;gap:18px}
+.card,.chart-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 8px 24px rgba(15,23,42,.06);margin-bottom:16px}
+h2{font-size:1.08rem;margin:0 0 12px}h3{font-size:.96rem;margin:16px 0 8px;border-top:1px solid var(--line);padding-top:12px}
+.kicker{font-size:.76rem;font-weight:900;color:var(--blue);letter-spacing:.03em;margin-bottom:3px}
+label{display:flex;justify-content:space-between;gap:10px;font-size:.9rem;color:#344054;margin:10px 0 5px}label span{font-size:.77rem;color:var(--muted)}
+input,select{width:100%;border:1px solid #d0d5dd;border-radius:10px;padding:10px;font-size:16px;background:#fff;color:var(--ink)}
+button{border:0;border-radius:11px;padding:10px 12px;font-weight:800;cursor:pointer}.primary{background:var(--blue);color:#fff}.secondary{background:#eef2ff;color:#3730a3}.ghost{background:#f8fafc;border:1px solid var(--line);color:#344054}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.note{font-size:.82rem;color:var(--muted);margin:7px 0}
+.box{background:#f8fafc;border:1px solid var(--line);border-radius:13px;padding:11px;margin-top:10px;font-size:.85rem;color:#475467}.box.good{background:#ecfdf3;border-color:#abefc6;color:#067647}.box.warn{background:#fffaeb;border-color:#fedf89;color:#93370d}.box.bad{background:#fff1f3;border-color:#fecdd6;color:#9f1239}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.metric{border:1px solid var(--line);border-radius:14px;background:#fbfdff;padding:12px;min-width:0}.metric .n{font-size:.76rem;color:var(--muted)}.metric .v{font-size:1.08rem;font-weight:900;word-break:keep-all}
+.menu{white-space:pre-line;background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:11px;font-size:.88rem}.nutri{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}.nutri div{background:#f8fafc;border:1px solid var(--line);border-radius:11px;padding:9px}.nutri b{display:block;font-size:1rem}.nutri span{font-size:.75rem;color:var(--muted)}
+.ct{font-weight:900;margin:0 0 3px}.cd{color:var(--muted);font-size:.83rem;margin:0 0 9px}.chart-wrap{display:grid;grid-template-columns:1fr 255px;gap:12px}canvas{width:100%;height:360px;display:block}.side{background:#f8fafc;border:1px solid var(--line);border-radius:14px;padding:12px;font-size:.83rem;color:#475467}.side h4{margin:0 0 6px;color:#1f2937}.side ul{margin:7px 0 0 18px;padding:0}
+.impact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.impact{border:1px solid var(--line);border-radius:14px;padding:13px;background:#fff}.impact b{font-size:1.3rem;display:block}.impact span{font-size:.78rem;color:var(--muted)}
+.wait-box{border:2px solid #bfdbfe;background:#eff6ff;border-radius:16px;padding:14px;margin-top:12px}.wait-value{font-size:1.6rem;font-weight:950;color:#1d4ed8;margin:4px 0}
+.badge{display:inline-block;border-radius:999px;padding:4px 8px;font-size:.75rem;font-weight:800;background:#eef2ff;color:#3730a3;margin:2px 3px 2px 0}.small{font-size:.78rem}.eq{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:11px;overflow:auto;margin:8px 0}
+.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;font-size:.86rem}th,td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left;white-space:nowrap}th{background:#f8fafc}a{color:#1d4ed8}
+details{margin-top:12px}summary{cursor:pointer;font-weight:800;color:#475467}
+.research{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.research>div{border:1px solid var(--line);border-radius:14px;padding:13px;background:#fbfdff}.research b.big{font-size:1.35rem;color:var(--green)}
+@media(max-width:930px){.grid,.chart-wrap{grid-template-columns:1fr}.metrics,.impact-grid{grid-template-columns:1fr 1fr}.nutri{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){header,main{padding-left:12px;padding-right:12px}.metrics,.impact-grid,.nutri,.btns,.research{grid-template-columns:1fr}canvas{height:290px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>의생명 아카데미 수험생 건강 지킴이 프로젝트 (혈당 편)</h1>
+  <p class="sub">양천고등학교 급식 영양정보와 간식 영양성분, 섭취 시점을 이용해 식후 혈당 변화의 상대적 차이를 시각화합니다.</p>
+  <div class="maker">제작자: 30125 최준우</div>
+</header>
+<nav class="tabs">
+  <button class="tab-btn active" onclick="showTab('main',this)">급식·간식 시뮬레이터</button>
+  <button class="tab-btn" onclick="showTab('reverse',this)">거꾸로 식사법</button>
+  <button class="tab-btn" onclick="showTab('model',this)">약동학 모델</button>
+  <button class="tab-btn" onclick="showTab('snacks',this)">간식 데이터</button>
+</nav>
+<main>
+<section id="main" class="tab active">
+<div class="grid">
+<aside>
+  <div class="card">
+    <div class="kicker">1. 학교 급식 자동 연동</div>
+    <h2>양천고등학교 날짜별 급식</h2>
+    <label>급식 날짜</label>
+    <input id="mealDate" type="date" onchange="selectMealDate();runAll()">
+    <div id="mealStatus" class="box">급식 데이터를 불러오는 중입니다.</div>
+
+    <h3>학생별 혈당 반응 민감도</h3>
+    <label>혈당 상승 민감도 <span>상대 모델</span></label>
+    <select id="sensitivityLevel" onchange="runAll()">
+      <option value="low">낮음</option>
+      <option value="medium" selected>중간</option>
+      <option value="high">높음</option>
+    </select>
+    <p id="sensitivityText" class="note"></p>
+    <label>기준 혈당 <span>mg/dL</span></label>
+    <input id="baseline" type="number" value="90" min="60" max="150" step="1" oninput="runAll()">
+
+    <details>
+      <summary>급식 영양값 직접 확인·보정</summary>
+      <label>탄수화물 <span>g</span></label><input id="mealCarb" type="number" value="100" step=".1" oninput="runAll()">
+      <label>단백질 <span>g</span></label><input id="mealProtein" type="number" value="35" step=".1" oninput="runAll()">
+      <label>지방 <span>g</span></label><input id="mealFat" type="number" value="20" step=".1" oninput="runAll()">
+      <label>열량 <span>kcal</span></label><input id="mealKcal" type="number" value="750" step="1" oninput="runAll()">
+    </details>
+  </div>
+
+  <div class="card">
+    <div class="kicker">2. 간식 추가</div>
+    <h2>간식 종류와 섭취 시점</h2>
+    <label>간식</label>
+    <select id="snackKind" onchange="renderSnackCard();runAll()">
+      <option value="blue" selected>블루 레몬에이드 (230 mL)</option>
+      <option value="ppong">뽕따 소다맛 (130 mL)</option>
+      <option value="crab">꽃게랑 오리지널 (70 g)</option>
+      <option value="koko">꼬꼬스낵 (32 g)</option>
+      <option value="pringles">프링글스 오리지널 (53 g)</option>
+    </select>
+    <label>급식 후 몇 분에 섭취? <span>분</span></label><input id="snackDelay" type="number" value="30" min="0" max="240" step="5" oninput="runAll()">
+    <label>섭취량 <span>기준 1회량 배수</span></label><input id="snackPortion" type="number" value="1" min=".1" max="3" step=".1" oninput="renderSnackCard();runAll()">
+    <div id="snackCard" class="box"></div>
+
+    <div class="wait-box">
+      <b>최소 간식 대기시간 계산</b>
+      <label>최고혈당 비교 기준 <span>mg/dL</span></label>
+      <select id="waitThreshold" onchange="runAll()"><option value="140" selected>140</option><option value="180">180</option></select>
+      <div id="waitValue" class="wait-value">계산 중</div>
+      <div id="waitDetail" class="small">선택한 간식을 0~240분 사이에서 5분 간격으로 이동해 비교합니다.</div>
+    </div>
+  </div>
+</aside>
+
+<section>
+  <div class="card">
+    <div class="kicker">오늘의 급식 입력</div>
+    <h2 id="mealTitle">급식 정보</h2>
+    <div id="mealMenu" class="menu">급식 메뉴를 불러오는 중입니다.</div>
+    <div id="mealNutrition" class="nutri"></div>
+  </div>
+
+  <div class="chart-card">
+    <p class="ct">1. 급식·간식 혈당 곡선 비교</p>
+    <p class="cd">급식 영양성분은 같은 상태에서 선택한 간식의 종류와 섭취 시점만 추가해 비교합니다.</p>
+    <div class="chart-wrap">
+      <canvas id="compareChart"></canvas>
+      <div class="side"><h4>비교 구간</h4><ul><li>파란선: 급식만</li><li>빨간선: 급식 + 간식</li><li>노란 영역: 140–180 mg/dL</li><li>붉은 영역: 180 mg/dL 이상</li></ul><p class="small">구간은 모델 비교를 위한 표시이며 개인 진단 기준을 의미하지 않습니다.</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="ct">2. 간식 추가 영향</p>
+    <p class="cd">시간별 추가상승 그래프 대신 최고점과 높은 혈당 구간에 머문 시간을 직접 비교합니다.</p>
+    <div id="impactMetrics" class="impact-grid"></div>
+    <div id="impactText" class="box"></div>
+  </div>
+
+  <div class="card">
+    <div class="kicker">거꾸로 식사법 미리보기</div>
+    <h2>식사 순서별 혈당 비교</h2>
+    <div id="reverseQuickMetrics" class="metrics"></div>
+    <p class="note">현재 선택한 급식에 교육용 거꾸로 식사 보정을 적용한 모델 결과입니다. 자세한 근거와 연구 수치는 ‘거꾸로 식사법’ 탭에서 확인할 수 있습니다.</p>
+  </div>
+</section>
+</div>
+</section>
+
+<section id="reverse" class="tab">
+  <div class="card">
+    <div class="kicker">식사 순서와 혈당</div>
+    <h2>거꾸로 식사법</h2>
+    <p><b>거꾸로 식사법</b>은 밥·면·빵 같은 탄수화물을 처음부터 먹기보다, <b>채소·식이섬유 → 단백질·지방이 있는 반찬 → 탄수화물</b> 순으로 먹는 방법입니다. 전체 식사량을 크게 바꾸지 않고 먹는 순서를 바꾸는 것이 핵심입니다.</p>
+    <div class="box good"><b>급식에서 적용 예</b><br>나물·샐러드·채소 반찬 → 고기·생선·달걀·두부 등 단백질 반찬 → 밥·면·빵 순서</div>
+    <h3>혈당 상승 완화 원리</h3>
+    <p>채소의 식이섬유와 단백질·지방이 먼저 들어오면 위 배출과 영양소 이동이 느려지고, 뒤이어 들어오는 탄수화물의 포도당이 소장에 한꺼번에 도달하는 것을 완화할 수 있습니다. 또한 식사 순서는 GLP-1 같은 장 호르몬 반응과 인슐린 반응에도 영향을 줄 수 있어 식후 혈당의 급격한 상승을 낮추는 방향으로 작용할 수 있습니다.</p>
+
+    <h3>연구 결과</h3>
+    <div class="research">
+      <div><b>제2형 당뇨병 성인 연구</b><br><b class="big">최고 상승폭 약 40% 감소</b><br>탄수화물을 마지막에 먹었을 때, 모든 음식을 함께 먹은 조건보다 incremental glucose peak가 40% 낮고 180분 glucose iAUC가 44% 낮았습니다.<br><a href="https://pubmed.ncbi.nlm.nih.gov/28989726/" target="_blank" rel="noopener">연구 보기</a></div>
+      <div><b>건강한 성인 연구</b><br><b class="big">2시간 glucose iAUC 40.9% 감소</b><br>채소와 단백질을 먼저 먹은 조건에서 표준 혼합식보다 0–120분 혈당 iAUC가 40.9% 낮았습니다.<br><a href="https://pubmed.ncbi.nlm.nih.gov/39559800/" target="_blank" rel="noopener">연구 보기</a></div>
+    </div>
+    <p class="note">위 수치는 각 연구 참여자 집단의 결과이며 학생 개인에게 그대로 적용되는 고정 비율은 아닙니다. 사이트 모델은 이 효과를 더 보수적으로 적용합니다.</p>
+  </div>
+
+  <div class="chart-card">
+    <p class="ct">식사 순서별 혈당 곡선</p>
+    <p class="cd">아래 수치는 현재 급식 영양성분과 선택한 혈당 민감도에 따라 자동 계산됩니다.</p>
+    <div class="chart-wrap"><canvas id="reverseChart"></canvas><div class="side" id="reverseSide"></div></div>
+  </div>
+</section>
+
+<section id="model" class="tab">
+  <div class="card">
+    <div class="kicker">약동학 개념을 이용한 교육용 모델</div>
+    <h2>소장 흡수·혈당 약동학 모델</h2>
+    <p>약동학에서는 약물이 투여된 뒤 <b>흡수(absorption)</b>되어 혈중 농도가 올라가고, 시간이 지나며 <b>제거(elimination)</b>되어 농도가 감소하는 과정을 구획 모델로 표현합니다. 이 사이트는 같은 아이디어를 포도당에 적용합니다.</p>
+    <div class="eq">소장 내 이용 가능한 포도당량: dA_gut/dt = -k_a · A_gut</div>
+    <div class="eq">혈당 기준치 위 상승분: dG_excess/dt = S · k_a · A_gut - k_e · G_excess</div>
+    <p><b>k<sub>a</sub></b>는 소장에서 혈액으로 포도당이 나타나는 속도를 나타내는 흡수 속도 상수, <b>k<sub>e</sub></b>는 인슐린 작용과 조직의 포도당 이용 등을 단순화한 회복 속도 상수, <b>S</b>는 학생별 혈당 상승 민감도를 나타냅니다.</p>
+    <h3>급식·간식 반응 중첩</h3>
+    <p>급식과 간식을 각각 하나의 입력으로 보고, 섭취 시점에 맞춰 각 흡수 곡선을 이동한 뒤 더합니다.</p>
+    <div class="eq">총 혈당(t) = 기준 혈당 + 급식 반응(t) + 간식 반응(t - 간식 섭취시간)</div>
+    <p>액체에 녹아 있는 당류는 흡수 속도를 빠르게, 단백질·지방이 많은 혼합식은 흡수 속도를 느리게 반영합니다. 또한 네 소장 모사 실험에서 확인한 간식별 상대 흡수 순위를 작은 보정계수로 사용합니다.</p>
+    <h3>학생별 민감도</h3>
+    <p>‘낮음·중간·높음’은 같은 탄수화물 입력에서도 학생마다 혈당 상승폭이 다를 수 있다는 점을 표현하기 위한 상대 설정입니다. 실제 개인 민감도를 확정하는 진단값이 아니라 비교 시뮬레이션을 위한 모델 변수입니다.</p>
+    <div class="box"><b>교육용 안내</b><br>이 페이지는 식사와 간식의 상대적 차이를 탐구하기 위한 시뮬레이터입니다. 실제 건강 상태를 판단해야 할 때에는 측정 혈당과 의료진의 판단을 우선해야 합니다.</div>
+  </div>
+</section>
+
+<section id="snacks" class="tab">
+  <div class="card">
+    <h2>간식 영양성분 및 실험 보정 데이터</h2>
+    <p>공개된 제품 영양정보와 네 소장 모사 실험 결과를 함께 사용합니다. 제품 리뉴얼에 따라 영양정보가 달라질 수 있으므로 실제 포장지 표시값이 있으면 그것을 우선할 수 있습니다.</p>
+    <div class="table-wrap"><table><thead><tr><th>간식</th><th>기준량</th><th>열량</th><th>탄수화물</th><th>당류</th><th>단백질</th><th>지방</th><th>실험 45분 상대값</th><th>영양정보</th></tr></thead><tbody id="snackTable"></tbody></table></div>
+  </div>
+</section>
+</main>
+<script>
+const SNACKS={
+  blue:{name:"블루 레몬에이드",serving:"230 mL",kcal:85,carb:21,sugar:19,protein:0,fat:0,form:"liquid",labFactor:1.30,lab45:342,source:"https://prod.danawa.com/info/?pcode=17974475"},
+  ppong:{name:"뽕따 소다맛",serving:"130 mL",kcal:120,carb:23,sugar:15,protein:0,fat:3.2,form:"melt",labFactor:1.18,lab45:283,source:"https://prod.danawa.com/info/?pcode=5119858"},
+  crab:{name:"꽃게랑 오리지널",serving:"70 g",kcal:385,carb:44.3,sugar:4.7,protein:4.7,fat:21.0,form:"solid",labFactor:1.00,lab45:126,source:"https://www.inout.team/search/food/detail/98289"},
+  koko:{name:"꼬꼬스낵",serving:"32 g",kcal:158,carb:19.5,sugar:1.4,protein:3.4,fat:7.4,form:"solid",labFactor:.95,lab45:102,source:"https://prod.danawa.com/info/?pcode=48640670"},
+  pringles:{name:"프링글스 오리지널",serving:"53 g",kcal:281,carb:30.3,sugar:0,protein:3.8,fat:16.1,form:"solid",labFactor:.88,lab45:69,source:"https://prod.danawa.com/info/?pcode=29036099"}
+};
+const SENS={low:{label:"낮음",coef:.68,desc:"같은 음식에서도 혈당 상승폭이 비교적 작게 나타나는 가정"},medium:{label:"중간",coef:.82,desc:"프로젝트의 기본 비교값"},high:{label:"높음",coef:1.00,desc:"같은 음식에서 혈당 상승폭이 비교적 크게 나타나는 가정"}};
+const COLORS={meal:"#2563eb",combo:"#dc2626",reverse:"#059669",grid:"#e4e7ec",text:"#475467"};
+let MEAL_DB={school:"양천고등학교",updated_at:"",meals:{}}, currentMeal=null;
+const $=id=>document.getElementById(id), num=id=>Number($(id).value);
+function localDate(){const d=new Date(),z=new Date(d.getTime()-d.getTimezoneOffset()*60000);return z.toISOString().slice(0,10)}
+function fmt(x,d=1){return Number.isFinite(x)?Number(x).toFixed(d):"—"} function clamp(x,a,b){return Math.max(a,Math.min(b,x))}
+function stripAllergy(s){return String(s||"").replace(/\s*[0-9]+(?:\.[0-9]+)*\.?/g,"").replace(/\s+/g," ").trim()}
+function showTab(id,b){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');requestAnimationFrame(()=>requestAnimationFrame(runAll))}
+async function loadMealDB(){
+  try{const r=await fetch('./data/meals.json?ts='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);MEAL_DB=await r.json();
+    $('mealStatus').className='box good';$('mealStatus').textContent='급식 정보를 불러왔습니다.';
+  }catch(e){$('mealStatus').className='box warn';$('mealStatus').innerHTML='<b>자동 급식 데이터 파일을 읽지 못했습니다.</b><br>GitHub Actions 첫 실행 전이라면 수동 실행 후 다시 확인하세요.'}
+  selectMealDate();runAll();
+}
+function selectMealDate(){
+  const date=$('mealDate').value,current=MEAL_DB.meals?.[date];currentMeal=current||null;
+  if(current){
+    if(Number.isFinite(current.carb))$('mealCarb').value=current.carb;if(Number.isFinite(current.protein))$('mealProtein').value=current.protein;if(Number.isFinite(current.fat))$('mealFat').value=current.fat;if(Number.isFinite(current.kcal))$('mealKcal').value=current.kcal;
+    $('mealTitle').textContent=`${date} ${MEAL_DB.school||'양천고등학교'} ${current.mealType||'중식'}`;
+    $('mealMenu').textContent=String(current.menu||'').split('\n').map(stripAllergy).filter(Boolean).join('\n');
+    $('mealStatus').className='box good';$('mealStatus').textContent=`${date} 중식`;
+  }else{
+    $('mealTitle').textContent=`${date} 급식 데이터 없음`;$('mealMenu').textContent='방학·주말이거나 아직 공개되지 않은 날짜일 수 있습니다. 아래 모델은 현재 입력되어 있는 영양값으로 계속 계산됩니다.';
+  }
+  renderMealNutrition();
+}
+function renderMealNutrition(){const vals=[["탄수화물",fmt(num('mealCarb'))+' g'],["단백질",fmt(num('mealProtein'))+' g'],["지방",fmt(num('mealFat'))+' g'],["열량",fmt(num('mealKcal'),0)+' kcal']];$('mealNutrition').innerHTML=vals.map(v=>`<div><span>${v[0]}</span><b>${v[1]}</b></div>`).join('')}
+function initSnacks(){const s=$('snackKind');if(!s.value||!SNACKS[s.value])s.value='blue';renderSnackCard();const table=$('snackTable');if(table)table.innerHTML=Object.values(SNACKS).map(v=>`<tr><td>${v.name}</td><td>${v.serving}</td><td>${v.kcal} kcal</td><td>${v.carb} g</td><td>${v.sugar} g</td><td>${v.protein} g</td><td>${v.fat} g</td><td>${v.lab45} mg/dL</td><td><a href="${v.source}" target="_blank" rel="noopener">출처</a></td></tr>`).join('')}
+function renderSnackCard(){const s=SNACKS[$('snackKind').value]||SNACKS.blue,p=Math.max(.1,num('snackPortion')||1);$('snackCard').innerHTML=`<b>${s.name}</b> <span class="badge">${s.serving} × ${fmt(p,1)}</span><br>탄수화물 <b>${fmt(s.carb*p)}g</b> · 당류 <b>${fmt(s.sugar*p)}g</b> · 단백질 ${fmt(s.protein*p)}g · 지방 ${fmt(s.fat*p)}g · 약 ${fmt(s.kcal*p,0)}kcal<br><span class="small">소장 모사 실험 45분 상대값: ${s.lab45} mg/dL · <a href="${s.source}" target="_blank" rel="noopener">공개 영양정보</a></span>`}
+function sensitivity(){return SENS[$('sensitivityLevel').value]||SENS.medium}
+function mealEvent(reverse=false){return{time:0,carb:Math.max(0,num('mealCarb')),sugar:null,protein:Math.max(0,num('mealProtein')),fat:Math.max(0,num('mealFat')),form:'mixed',factor:1,reverse,label:'급식'}}
+function snackEvent(delay=null){const s=SNACKS[$('snackKind').value]||SNACKS.blue,p=Math.max(.1,num('snackPortion')||1);return{time:delay===null?Math.max(0,num('snackDelay')):delay,carb:s.carb*p,sugar:s.sugar*p,protein:s.protein*p,fat:s.fat*p,form:s.form,factor:s.labFactor,reverse:false,label:s.name}}
+function eventParams(e){
+  const sens=sensitivity().coef,carb=Math.max(0,e.carb||0),sugar=e.sugar===null?null:Math.max(0,e.sugar||0);let fast=sugar===null?.20:clamp(carb?sugar/carb:0,.03,.95);if(e.form==='liquid')fast=clamp(fast+.08,.05,.98);if(e.form==='melt')fast=clamp(fast+.04,.05,.96);
+  const gly=0.48+0.52*fast,damp=1/(1+.006*(e.protein||0)+.004*(e.fat||0));let amp=carb*sens*gly*damp;let formKa=e.form==='liquid'?1.22:e.form==='melt'?1.08:1;let slow=1/(1+.010*(e.protein||0)+.014*(e.fat||0));let ka=(.022+.050*fast)*formKa*slow*(e.factor||1);
+  if(e.reverse){amp*=.85;ka*=.72}return{amp,ka:Math.max(.004,ka)}
+}
+function kernel(t,ka,ke){if(t<0)return 0;if(Math.abs(ka-ke)<1e-7){const tp=1/ke,p=tp*Math.exp(-1),r=t*Math.exp(-ke*t);return p?r/p:0}const tp=Math.log(ka/ke)/(ka-ke),p=Math.exp(-ke*tp)-Math.exp(-ka*tp),r=Math.exp(-ke*t)-Math.exp(-ka*t);return p?Math.max(0,r/p):0}
+function simulate(events,end=360,dt=1){const base=Math.max(50,num('baseline')||90),ke=.72/60,t=[],g=[];for(let x=0;x<=end;x+=dt){t.push(x);let rise=0;for(const e of events){const p=eventParams(e);rise+=p.amp*kernel(x-e.time,p.ka,ke)}g.push(base+rise)}return{t,g,dt,base}}
+function maxVal(a){let v=-Infinity,i=0;a.forEach((x,j)=>{if(x>v){v=x;i=j}});return{v,i}} function timeAbove(s,th){return s.g.reduce((a,g)=>a+(g>th?s.dt:0),0)} function aucRise(s){return s.g.reduce((a,g)=>a+Math.max(0,g-s.base)*s.dt,0)}
+function metrics(s){const m=maxVal(s.g);return{peak:m.v,peakTime:s.t[m.i],t140:timeAbove(s,140),t180:timeAbove(s,180),auc:aucRise(s)}}
+function waitRecommendation(){const th=num('waitThreshold')||140,meal=simulate([mealEvent(false)]),mm=metrics(meal);let first=null,best=null;for(let d=0;d<=240;d+=5){const s=simulate([mealEvent(false),snackEvent(d)]),m=metrics(s),c={d,m};if(!best||m.peak<best.m.peak||(Math.abs(m.peak-best.m.peak)<.001&&m.t140<best.m.t140))best=c;if(!first&&m.peak<=th)first=c}return{th,mm,first,best}}
+function runAll(){renderMealNutrition();const se=sensitivity();$('sensitivityText').textContent=`${se.label}: ${se.desc}`;const meal=simulate([mealEvent(false)]),combo=simulate([mealEvent(false),snackEvent()]),rev=simulate([mealEvent(true)]),mm=metrics(meal),cm=metrics(combo),rm=metrics(rev);
+  const peakDiff=cm.peak-mm.peak,peakPct=mm.peak?peakDiff/mm.peak*100:0,t140Diff=cm.t140-mm.t140,t180Diff=cm.t180-mm.t180,aucPct=mm.auc?(cm.auc/mm.auc-1)*100:0;
+  $('impactMetrics').innerHTML=[['최고점 추가 상승',`+${fmt(peakDiff)} mg/dL`,`최고혈당 ${fmt(mm.peak)} → ${fmt(cm.peak)}`],['140 이상 시간 변화',`${t140Diff>=0?'+':''}${fmt(t140Diff,0)}분`,`${fmt(mm.t140,0)} → ${fmt(cm.t140,0)}분`],['180 이상 시간 변화',`${t180Diff>=0?'+':''}${fmt(t180Diff,0)}분`,`${fmt(mm.t180,0)} → ${fmt(cm.t180,0)}분`]].map(v=>`<div class="impact"><span>${v[0]}</span><b>${v[1]}</b><span>${v[2]}</span></div>`).join('');
+  $('impactText').innerHTML=`선택한 간식을 급식 후 <b>${fmt(num('snackDelay'),0)}분</b>에 추가하면 모델상 최고혈당은 급식 단독보다 <b>${fmt(peakPct)}%</b> 높아지고, 기준혈당 위 전체 혈당 부담(AUC)은 <b>${fmt(aucPct)}%</b> 변합니다. 특히 높은 혈당 구간에 머무는 시간이 얼마나 늘어나는지를 함께 보는 것이 단순 최고점만 보는 것보다 비교에 유용합니다.`;
+  const riseNormal=mm.peak-meal.base,riseRev=rm.peak-rev.base,revPeakPct=riseNormal?Math.max(0,(1-riseRev/riseNormal)*100):0,revAucPct=mm.auc?Math.max(0,(1-rm.auc/mm.auc)*100):0;
+  $('reverseQuickMetrics').innerHTML=[['일반식 최고혈당',`${fmt(mm.peak)} mg/dL`,`${fmt(mm.peakTime,0)}분`],['거꾸로식 최고혈당',`${fmt(rm.peak)} mg/dL`,`상승폭 ${fmt(revPeakPct)}% 완화`],['혈당 부담(AUC)',`${fmt(revAucPct)}% 감소`,`모델상 비교`]].map(v=>`<div class="metric"><div class="n">${v[0]}</div><div class="v">${v[1]}</div><div class="n">${v[2]}</div></div>`).join('');
+  $('reverseSide').innerHTML=`<h4>현재 급식의 모델 결과</h4><ul><li>최고혈당: ${fmt(mm.peak)} → <b>${fmt(rm.peak)} mg/dL</b></li><li>기준혈당 대비 최고 상승폭: <b>${fmt(revPeakPct)}% 완화</b></li><li>혈당 상승 AUC: <b>${fmt(revAucPct)}% 감소</b></li><li>140 이상 시간: ${fmt(mm.t140,0)} → <b>${fmt(rm.t140,0)}분</b></li></ul><p class="small">사이트는 실제 연구의 40% 전후 효과를 그대로 적용하지 않고 보수적인 교육용 보정을 사용합니다.</p>`;
+  const rec=waitRecommendation();if(rec.first){$('waitValue').textContent=`급식 후 약 ${rec.first.d}분`;$('waitDetail').innerHTML=`${rec.th} mg/dL을 넘지 않는 가장 이른 5분 단위 후보입니다. 이때 최고혈당은 약 <b>${fmt(rec.first.m.peak)} mg/dL</b>입니다.`}else{$('waitValue').textContent=`권장 후보 ${rec.best.d}분`;$('waitDetail').innerHTML=`0~240분에서는 ${rec.th} mg/dL 이하로 유지되는 시점을 찾지 못했습니다. 그중 모델 최고혈당이 가장 낮은 후보가 급식 후 <b>${rec.best.d}분</b>입니다.`}
+  drawLine('compareChart',meal.t,[{label:'급식만',data:meal.g,color:COLORS.meal},{label:'급식 + 간식',data:combo.g,color:COLORS.combo}],true);drawLine('reverseChart',meal.t,[{label:'일반 식사 순서',data:meal.g,color:COLORS.meal},{label:'거꾸로 식사법',data:rev.g,color:COLORS.reverse,dash:[7,4]}],true)
+}
+function prep(id){const c=$(id),r=c.getBoundingClientRect(),d=window.devicePixelRatio||1;if(!r.width)return null;c.width=r.width*d;c.height=r.height*d;const x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);return{x,w:r.width,h:r.height}}
+function drawLine(id,t,series,bands){const P=prep(id);if(!P)return;const{x:ctx,w,h}=P,m={l:58,r:16,t:24,b:46},pw=w-m.l-m.r,ph=h-m.t-m.b,vals=series.flatMap(s=>s.data);let mn=Math.min(...vals,70),mx=Math.max(...vals,190);mn=Math.floor((mn-5)/10)*10;mx=Math.ceil((mx+5)/10)*10;const sx=v=>m.l+v/t[t.length-1]*pw,sy=v=>m.t+(mx-v)/(mx-mn)*ph;ctx.clearRect(0,0,w,h);if(bands){ctx.fillStyle='rgba(245,158,11,.10)';ctx.fillRect(m.l,sy(180),pw,sy(140)-sy(180));ctx.fillStyle='rgba(239,68,68,.08)';ctx.fillRect(m.l,m.t,pw,Math.max(0,sy(180)-m.t))}ctx.font='12px system-ui';ctx.strokeStyle=COLORS.grid;ctx.fillStyle=COLORS.text;for(let y=Math.ceil(mn/20)*20;y<=mx;y+=20){const py=sy(y);ctx.beginPath();ctx.moveTo(m.l,py);ctx.lineTo(w-m.r,py);ctx.stroke();ctx.fillText(String(y),8,py+4)}for(let xx=0;xx<=t[t.length-1];xx+=60){const px=sx(xx);ctx.beginPath();ctx.moveTo(px,m.t);ctx.lineTo(px,h-m.b);ctx.stroke();ctx.fillText(String(xx),px-8,h-24)}ctx.strokeStyle='#344054';ctx.beginPath();ctx.moveTo(m.l,m.t);ctx.lineTo(m.l,h-m.b);ctx.lineTo(w-m.r,h-m.b);ctx.stroke();ctx.fillStyle='#344054';ctx.fillText('급식 후 시간 (분)',m.l+pw/2-45,h-8);ctx.save();ctx.translate(14,m.t+ph/2+30);ctx.rotate(-Math.PI/2);ctx.fillText('혈당 (mg/dL)',0,0);ctx.restore();series.forEach(s=>{ctx.strokeStyle=s.color;ctx.lineWidth=2.8;ctx.setLineDash(s.dash||[]);ctx.beginPath();s.data.forEach((v,i)=>{const px=sx(t[i]),py=sy(v);i?ctx.lineTo(px,py):ctx.moveTo(px,py)});ctx.stroke();ctx.setLineDash([])});let ly=m.t+9;series.forEach(s=>{ctx.fillStyle=s.color;ctx.fillRect(m.l+8,ly+3,18,3);ctx.fillStyle='#1f2937';ctx.fillText(s.label,m.l+32,ly+8);ly+=18})}
+window.addEventListener('load',()=>{$('mealDate').value=localDate();initSnacks();loadMealDB();runAll()});window.addEventListener('resize',()=>setTimeout(runAll,80));
+</script>
+</body>
+</html>

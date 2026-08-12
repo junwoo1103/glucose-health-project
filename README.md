@@ -1,1 +1,0 @@
-# glucose-health-project

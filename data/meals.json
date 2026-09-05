@@ -2,11 +2,11 @@
   "school": "양천고등학교",
   "schoolCode": "7010209",
   "officeCode": "B10",
-  "updated_at": "2026-09-05T06:19:19+09:00",
+  "updated_at": "2026-09-06T06:18:27+09:00",
   "mode": "authenticated-open-api",
   "range": {
-    "from": "2026-08-22",
-    "to": "2026-11-04"
+    "from": "2026-08-23",
+    "to": "2026-11-05"
   },
   "meals": {
     "2026-08-13": {
